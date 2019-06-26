@@ -9,7 +9,7 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, gamePlaying, previousDice, maxScore;
+var scores, roundScore, activePlayer, gamePlaying, maxScore;
 
 fncInit();
 
@@ -23,22 +23,26 @@ function fncRollDice(){
 
     if (gamePlaying) {
         //1 - select the dice value randomly
-        var diceNumber = Math.floor(Math.random() * 6) + 1; // select the dice between value [1..6]
+        var diceNumber1 = Math.floor(Math.random() * 6) + 1; // select the dice between value [1..6]
+        var diceNumber2 = Math.floor(Math.random() * 6) + 1; // select the dice between value [1..6]
 
-        console.log('Dice = ' + diceNumber);
+        console.log('Dice1 = ' + diceNumber1);
+        console.log('Dice2 = ' + diceNumber2);
 
         //2 - display the dice result
-        var diceDOM = document.querySelector('.dice');
-        diceDOM.style.display = 'block';
-        diceDOM.src = 'dice-' + diceNumber + '.png';  //change the dice image
+        document.getElementById('dice-1').style.display = 'block';
+        document.getElementById('dice-1').src = 'dice-' + diceNumber1 + '.png';  //change the dice image
 
-        //3 - update the rounded score if the dice number isn't 1
-        if (diceNumber > 1) {
+        document.getElementById('dice-2').style.display = 'block';
+        document.getElementById('dice-2').src = 'dice-' + diceNumber2 + '.png';  //change the dice image
 
-            console.log('previousDice = ' + previousDice + ';   diceNumber = ' + diceNumber); 
-            if ((previousDice === 6) && (diceNumber === 6)) {
+
+        //3 - update the rounded score if the dices number aren't 1
+        if ((diceNumber1 > 1) & (diceNumber2 > 1)) {
+
+            if ((diceNumber1 === 6) && (diceNumber2 === 6)) {
                     // the player got 2 six in a row, he loses his entire score and the hand is pass to the next player
-                    console.log('The player ' + activePlayer + ' got 2 six in a row, so he loses everything!');
+                    console.log('The player ' + activePlayer + ' got 2 six, so he loses everything!');
                     roundScore = 0;
                     scores[activePlayer] = 0;
                     document.querySelector('#current-' + activePlayer).textContent = 0;
@@ -46,8 +50,7 @@ function fncRollDice(){
                     fncNextPlayer();    
             } else {
                 // add score
-                roundScore += diceNumber;
-                previousDice = diceNumber;
+                roundScore += diceNumber1 + diceNumber2;
                 document.querySelector('#current-' + activePlayer).textContent = roundScore;
             }
         } else {
@@ -66,7 +69,7 @@ function fncHold(){
     
         var input = document.querySelector('.final-score').value;
         if (!input) {
-            input = 20;
+            input = 100;
         }
 
         console.log(input);
@@ -74,7 +77,8 @@ function fncHold(){
         if (scores[activePlayer] >= input) {
             gamePlaying = false;
             document.querySelector('#name-' + activePlayer).textContent = 'WINNER!';
-            document.querySelector('.dice').style.display = 'none';
+            document.getElementById('dice-1').style.display = 'none';
+            document.getElementById('dice-2').style.display = 'none';
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
             document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
         } else {
@@ -108,7 +112,8 @@ function fncInit(){
     document.querySelector('.player-1-panel').classList.remove('active');
  
     
-    document.querySelector('.dice').style.display = 'none';
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
 
 }
 
@@ -116,13 +121,13 @@ function fncNextPlayer(){
        // next player
        activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
        roundScore = 0;
-       previousDice = 0;
        document.getElementById('current-0').textContent = '0';
        document.getElementById('current-1').textContent = '0';
        document.querySelector('.player-0-panel').classList.toggle('active');  
        document.querySelector('.player-1-panel').classList.toggle('active');
 
-       document.querySelector('.dice').style.display = 'none';
+       document.querySelector('#dice-1').style.display = 'none';
+       document.querySelector('#dice-2').style.display = 'none';
 
 }
 
